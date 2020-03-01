@@ -1,0 +1,80 @@
+---
+title: "Milestone 4"
+author: "Miroslav Bergam"
+date: "2/29/2020"
+output: bookdown::pdf_document2
+bibliography: bibliography.bib
+link_citations: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+# Writing bibliography
+knitr::write_bib(c("knitr", "stringr"), "bibliography.bib", width = 60)
+
+# Importing necessary libaries
+library(gtable)
+library(stargazer)
+library(tidyverse)
+library(gt)
+
+```
+
+This is the PDF document of my replication project.
+
+@R-knitr and @R-stringr
+
+^[[Github repository:https://github.com/mirobergam/milestone-4](https://github.com/mirobergam/milestone-4)]
+
+### GT Table
+
+```{r Table, results="asis", echo=FALSE}
+
+# Fake data
+schools <- c(1,2,3,4,5)
+grades <- c(90,92,93,94,95)
+students <- c(900,912,193,294,395)
+
+# Making a tibble of fake data
+data = tibble(schools, grades, students)
+
+# Table
+table <- data %>% 
+  
+  gt() %>%
+  
+  tab_header(
+    title = "Title",
+    subtitle = "Subtitle"
+  ) %>%
+  
+  fmt_number(columns = vars(schools)
+             ) %>%
+  
+  tab_footnote(footnote = "Footnote", locations = cells_column_labels(columns = vars(grades))) %>%
+  cols_label(
+    grades = "Grades",
+    schools = "Schools",
+    students = "Students"
+  )
+
+table
+
+```
+
+### Regression Table in Stargazer
+
+``` {r Regression Table, results="asis", echo = FALSE}
+
+# Model with fake data
+model <- lm(schools ~ grades, data = data )
+
+# Displaying model with stargazer
+stargazer(model, header = FALSE,
+          dep.var.labels=c("schools"),
+          covariate.labels=c("grades", "students"))
+
+```
+
+### References
